@@ -22,13 +22,13 @@ X_test  = np.hstack([X_test, np.ones((n_test, 1))])
 
 
 # training:
-def train_perceptron(learning_rate):
+def train_perceptron(learning_rate, weight_init_mult):
     train_accuracy_matrix = np.zeros((N_TRIALS, N_EPOCHS))
     test_accuracy_matrix  = np.zeros((N_TRIALS, N_EPOCHS//TEST_FREQ))
     loss_matrix           = np.zeros((N_TRIALS, N_EPOCHS))
     for trial in range(N_TRIALS):
         np.random.seed(trial)
-        perceptron = Perceptron(input_dim=X_train.shape[1], n_classes=N_CLASSES)
+        perceptron = Perceptron(input_dim=X_train.shape[1], n_classes=N_CLASSES, weight_mult=weight_init_mult)
         for epoch in range(N_EPOCHS):
             # weight update:
             Y_pred = perceptron.forward(X_train)
@@ -37,7 +37,7 @@ def train_perceptron(learning_rate):
             # and Y_pred & Y_train are (batch size, n_classes), so we need to transpose X:
             grad_W = 2 * X_train.T @ (Y_pred_softmax - Y_train)
             perceptron.W -= learning_rate * grad_W
-            loss = -np.sum(Y_train * np.log(Y_pred_softmax))  # the cross-entropy loss
+            loss = np.mean((Y_pred_softmax - Y_train)**2)  # the cross-entropy loss
             loss_matrix[trial, epoch] = loss
             # accuracy:
             train_accuracy_matrix[trial, epoch] = accuracy(Y_pred=Y_pred, y_true=y_train)
@@ -51,8 +51,8 @@ def train_perceptron(learning_rate):
     return train_accuracy_matrix, test_accuracy_matrix, loss_matrix
 
 
-def first_experiment(lr):
-    train_accuracy_matrix, test_accuracy_matrix, loss_matrix = train_perceptron(learning_rate=lr)
+def first_experiment(lr, weight_init_mult):
+    train_accuracy_matrix, test_accuracy_matrix, loss_matrix = train_perceptron(lr, weight_init_mult)
 
     train_acc_avg, train_acc_min, train_acc_max = process_learning_curve(train_accuracy_matrix)
     train_loss_avg, train_loss_min, train_loss_max = process_learning_curve(loss_matrix)
@@ -139,4 +139,4 @@ def lr_sensitivity_analysis(learning_rates):
 if __name__ == '__main__':
     # learning_rates = [0.0001, 0.0005, 0.00075, 0.001, 0.0025, 0.005, 0.01]
     # lr_sensitivity_analysis(learning_rates)
-    first_experiment(lr=0.0025)
+    first_experiment(lr=0.0025, weight_init_mult=0.01)
