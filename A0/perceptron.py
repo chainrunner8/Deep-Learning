@@ -1,5 +1,6 @@
 import numpy as np
 
+STUDENTY_NUMBER = 4645251
 
 class Perceptron:
     def __init__(self, input_dim, n_classes):
