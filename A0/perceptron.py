@@ -1,0 +1,10 @@
+import numpy as np
+
+
+class Perceptron:
+    def __init__(self, input_dim, n_classes):
+        self.W = np.random.randn(input_dim, n_classes)  # the weights matrix
+
+    def forward(self, X):  # X needs to have shape (batch size, input_dim + 1) where X[i,input_dim + 1] = 1 always
+        Y_pred = X @ self.W
+        return Y_pred
