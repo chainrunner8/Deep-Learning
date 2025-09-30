@@ -137,6 +137,10 @@ def lr_sensitivity_analysis(learning_rates):
     plt.show()
 
 if __name__ == '__main__':
-    # learning_rates = [0.0001, 0.0005, 0.00075, 0.001, 0.0025, 0.005, 0.01]
-    # lr_sensitivity_analysis(learning_rates)
-    first_experiment(lr=0.0025, weight_init_mult=0.01)
+    args = parse_args()
+    if args.experiment == 1:
+        first_experiment(lr=args.lr, weight_init_mult=args.weight_mult)
+    elif args.experiment == 2:
+        learning_rates = [0.0001, 0.0005, 0.00075, 0.001, 0.0025, 0.005, 0.01]
+        lr_sensitivity_analysis(learning_rates)
+    
