@@ -9,7 +9,7 @@ def one_hot_encode(y, n_classes):
     return one_hot_y
 
 def softmax(Z):
-    Z_shift = Z - np.max(Z, axis=1, keepdims=True)
+    Z_shift = Z - np.max(Z, axis=1, keepdims=True)  # this shift is to prevent the exp from overflowing
     return (np.exp(Z_shift).T / np.sum(np.exp(Z_shift), axis=1)).T
 
 def minmax(Z):
